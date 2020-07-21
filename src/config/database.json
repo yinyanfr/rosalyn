@@ -1,0 +1,8 @@
+{
+    "uri": "mongodb://localhost:27017/rosalyn",
+    "options": {
+        "useNewUrlParser": true,
+        "useUnifiedTopology": true,
+        "useCreateIndex": true
+    }
+}
