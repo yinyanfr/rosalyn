@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const musicScanDir = require("../tools/music_scan_dir")
 
 const MusicSchema = new mongoose.Schema({
     path: {
@@ -25,5 +26,11 @@ const MusicSchema = new mongoose.Schema({
         ref: "User"
     }
 })
+
+MusicSchema.statics.addDir = async function(path){
+    const Music = this
+    const scanned = await musicScanDir(path)
+    return Music.insertMany(scanned)
+}
 
 module.exports = mongoose.model("Music", MusicSchema)

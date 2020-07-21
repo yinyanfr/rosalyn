@@ -3,6 +3,7 @@ const validator = require("validator")
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcryptjs")
 const { salt } = require("../config/auth.json")
+const ranks = require("../config/rank")
 
 const UserSchema = new mongoose.Schema({
     email: {
@@ -116,6 +117,10 @@ UserSchema.statics.findByInfo = function (email, password) {
         })
 }
 
+UserSchema.methods.outrank = function (rank) {
+    const user = this
+    return ranks.indexOf(user.rank) >= ranks.indexOf(rank)
+}
 
 UserSchema.pre("save", function (next) {
     var user = this

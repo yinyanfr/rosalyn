@@ -1,10 +1,12 @@
 const readdir = require("recursive-readdir")
 const meta = require("music-metadata")
 const fs = require("fs")
+const allSettled = require("promise.allsettled")
 
 const parseList = list => {
     const res = list.map(e => meta.parseFile(e))
-    return Promise.allSettled(res)
+    if(Promise.allSettled) return Promise.allSettled(res)
+    else return allSettled(res)
 }
 
 const musicScanDir = async (path) => {
