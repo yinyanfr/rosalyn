@@ -1,0 +1,109 @@
+[
+    {
+        "path": "/home/yan/Downloads/Che'Nelle - Happiness.mp3",
+        "track": {
+            "no": null,
+            "of": null
+        },
+        "disk": {
+            "no": null,
+            "of": null
+        },
+        "movementIndex": {},
+        "title": "Happiness",
+        "album": "Happiness",
+        "artists": [
+            "Che'Nelle"
+        ],
+        "artist": "Che'Nelle",
+        "picture": [
+            {
+                "format": "image/jpeg",
+                "type": "Cover (front)",
+                "description": "",
+                "data": "some base64 string"
+            }
+        ]
+    },
+    {
+        "path": "/home/yan/Downloads/Humbert Humbert (ハンバート ハンバート) - 1時間.mp3",
+        "track": {
+            "no": 3,
+            "of": null
+        },
+        "disk": {
+            "no": null,
+            "of": null
+        },
+        "movementIndex": {},
+        "title": "1時間",
+        "artists": [
+            "Humbert Humbert (ハンバート ハンバート)"
+        ],
+        "artist": "Humbert Humbert (ハンバート ハンバート)",
+        "album": "道はつづく (延续的道路)",
+        "genre": [
+            "Blues"
+        ],
+        "picture": [
+            {
+                "format": "image/jpeg",
+                "type": "Cover (front)",
+                "description": "",
+                "data": "some base64 string"
+            }
+        ]
+    },
+    {
+        "path": "/home/yan/Downloads/TRUE (唐沢美帆) - Sincerely.mp3",
+        "track": {
+            "no": 1,
+            "of": null
+        },
+        "disk": {
+            "no": 1,
+            "of": null
+        },
+        "movementIndex": {},
+        "title": "Sincerely",
+        "album": "Sincerely (アニメ盤)",
+        "artists": [
+            "TRUE (唐沢美帆)"
+        ],
+        "artist": "TRUE (唐沢美帆)",
+        "picture": [
+            {
+                "format": "image/jpeg",
+                "type": "Cover (front)",
+                "description": "",
+                "data": "some base64 string"
+            }
+        ]
+    },
+    {
+        "path": "/home/yan/Downloads/高桥李依 (たかはし りえ) - Blooming Star.mp3",
+        "track": {
+            "no": 2,
+            "of": null
+        },
+        "disk": {
+            "no": 1,
+            "of": null
+        },
+        "movementIndex": {},
+        "title": "Blooming Star",
+        "album": "THE IDOLM@STER STELLA MASTER 00 ToP!!!!!!!!!!!!!",
+        "artists": [
+            "高桥李依 (たかはし りえ)"
+        ],
+        "artist": "高桥李依 (たかはし りえ)",
+        "picture": [
+            {
+                "format": "image/jpeg",
+                "type": "Cover (front)",
+                "description": "",
+                "data": "some base64 string"
+            }
+        ]
+    }
+]

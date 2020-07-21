@@ -26,7 +26,7 @@ const UserSchema = new mongoose.Schema({
     username: {
         type: String,
         trim: true,
-        default: "User"
+        default: "Anonymous"
     },
 
     rank: {
