@@ -13,7 +13,7 @@ const MusicSchema = new mongoose.Schema({
     picture: [
         {
             format: String,
-            type: String,
+            type: {type: String},
             description: String,
             data: String,
         }
@@ -24,13 +24,33 @@ const MusicSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
-    }
+    },
+
+    libraryId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    },
 })
 
-MusicSchema.statics.addDir = async function(path){
+MusicSchema.statics.addDir = async function(path, rec, libraryId){
     const Music = this
-    const scanned = await musicScanDir(path)
-    return Music.insertMany(scanned)
+    const scanned = await musicScanDir(path, rec)
+    const music = scanned.map(e => ({...e, libraryId}))
+    return Music.insertMany(music)
+}
+
+MusicSchema.statics.removeDir = function(libraryId){
+    const Music = this
+    return Music.deleteMany({libraryId})
+}
+
+MusicSchema.statics.sample = function(size){
+    const Music = this
+    return Music.aggregate([{
+        "$sample": {
+            "$size": size
+        }
+    }])
 }
 
 module.exports = mongoose.model("Music", MusicSchema)

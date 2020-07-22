@@ -20,12 +20,6 @@ app.post("/register", async (req, res) => {
     try {
         await user.save()
         const token = await user.generateToken("auth")
-        // var info = await Info.findOne({ userId: user._id })
-        // if (!info) {
-        //     info = new Info()
-        //     info.userId = user._id
-        //     await info.save()
-        // }
         
         sendMail(register, user.email).catch(err => {
             console.log(err)

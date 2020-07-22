@@ -1,12 +1,12 @@
 {
     "register": {
-        "from": "no-reply@73cn.fr",
+        "from": "no-reply@yinyan.fr",
         "subject": "Welcome to Rosalyn, your music library",
         "text": "Welcome to Rosalyn, your music library",
         "html": "<div>Welcome to Rosalyn, your music library</div>"
     },
     "reset_password": {
-        "from": "no-reply@73cn.fr",
+        "from": "no-reply@yinyan.fr",
         "subject": "Reset your password",
         "text": "Click https://music.yinyan.fr/reset/{token} to reset your password",
         "html": "<div>Click <a href='https://music.yinyan.fr/reset/{token}'>https://music.yinyan.fr/reset/{token}</a> to reset your password</div>"

@@ -13,6 +13,11 @@ const ReviewSchema = new mongoose.Schema({
 
     album: String,
     artist: String,
+
+    value: {
+        type: Number,
+        default: 0
+    }
 })
 
 module.exports = mongoose.model("Review", ReviewSchema)

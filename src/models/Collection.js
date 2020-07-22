@@ -1,6 +1,6 @@
 const mongoose = require("mongoose")
 
-const FavorSchema = new mongoose.Schema({
+const CollectionSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
@@ -12,4 +12,4 @@ const FavorSchema = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model("Favor", FavorSchema)
+module.exports = mongoose.model("Favor", CollectionSchema)
