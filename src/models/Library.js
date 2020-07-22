@@ -51,7 +51,7 @@ LibrarySchema.statics.addDir = async function ({ path, rec, userId, name, descri
 
     await Music.removeDir(libraryId)
     
-    return Music.addDir(path, rec, libraryId)
+    return Music.addDir(path, rec, userId, libraryId)
 }
 
 LibrarySchema.statics.removeDir = async function(libraryId){

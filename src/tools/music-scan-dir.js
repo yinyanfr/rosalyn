@@ -9,10 +9,8 @@ const parseList = list => {
     else return allSettled(res)
 }
 
-const musicScanDir = async (dirpath, rec) => {
-    const readdir = rec ? readDirRec : readDir
-    const files = await readdir(dirpath)
-    const metas = await parseList(files)
+const scanList = async paths => {
+    const metas = await parseList(paths)
     const scanned = []
     metas.forEach((e, i) => {
         if(e.status === "fulfilled"){
@@ -34,4 +32,14 @@ const musicScanDir = async (dirpath, rec) => {
     return scanned
 }
 
-module.exports = musicScanDir
+const musicScanDir = async (dirpath, rec) => {
+    const readdir = rec ? readDirRec : readDir
+    const files = await readdir(dirpath)
+    const scanned = await scanList(files)
+    return scanned
+}
+
+module.exports = {
+    musicScanDir,
+    scanList
+}

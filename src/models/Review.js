@@ -17,7 +17,9 @@ const ReviewSchema = new mongoose.Schema({
     value: {
         type: Number,
         default: 0
-    }
+    },
+
+    comment: String,
 })
 
 module.exports = mongoose.model("Review", ReviewSchema)

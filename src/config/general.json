@@ -1,3 +1,4 @@
 {
-    "port": 20208
+    "port": 20208,
+    "upload_destination": "./music"
 }

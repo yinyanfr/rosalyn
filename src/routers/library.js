@@ -3,7 +3,7 @@ const Library = require("../models/Library")
 
 const app = express.Router()
 
-app.post("/add_dir", async (req, res) => {
+app.post("/add", async (req, res) => {
     const {
         path, rec, userId, name, description
     } = req.body
@@ -16,7 +16,7 @@ app.post("/add_dir", async (req, res) => {
     }
 })
 
-app.delete("/remove_dir", async (req, res) => {
+app.delete("/remove", async (req, res) => {
     const {
         libraryId
     } = req.body

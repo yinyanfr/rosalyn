@@ -2,7 +2,7 @@ const express = require("express")
 const User = require("../models/User")
 const authOpt = require("../middlewares/auth-opt")
 const {register, reset_password} = require("../config/mail.json")
-const sendMail = require("../tools/send_mail")
+const sendMail = require("../tools/send-mail")
 
 const app = express.Router()
 const auth = authOpt()

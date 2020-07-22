@@ -78,7 +78,7 @@ PlaylistSchema.methods.add = function(musicId){
     return playlist.save()
 }
 
-PlaylistSchema.methods.remove = function(musicId){
+PlaylistSchema.methods.removeMusic = function(musicId){
     const playlist = this
     const index = playlist.music.indexOf(musicId)
     if(index > -1){
