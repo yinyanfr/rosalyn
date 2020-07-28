@@ -6,7 +6,8 @@ const {
 const MusicSchema = new mongoose.Schema({
     path: {
         required: true,
-        type: String
+        type: String,
+        unique: true
     },
     title: String,
     album: String,
@@ -43,6 +44,8 @@ MusicSchema.statics.addMany = async function(paths, userId){
     return Music.insertMany(music)
 }
 
+// FIXME: update dir
+// using one query to add all lusic and avoid existing ones
 MusicSchema.statics.addDir = async function(path, rec, userId, libraryId){
     const Music = this
     const scanned = await musicScanDir(path, rec)

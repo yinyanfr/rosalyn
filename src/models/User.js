@@ -50,9 +50,9 @@ const UserSchema = new mongoose.Schema({
 UserSchema.methods.toJSON = function () {
     var user = this
     const {
-        _id, email, username
+        _id, email, username, rank
     } = user.toObject()
-    return {_id, email, username}
+    return {_id, email, username, rank}
 }
 
 UserSchema.methods.generateToken = function (access) {

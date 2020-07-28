@@ -15,8 +15,9 @@ const scanList = async paths => {
     metas.forEach((e, i) => {
         if(e.status === "fulfilled"){
             const obj = {
-                path: files[i],
+                path: paths[i],
                 ...(e.value.common),
+                duration: e.value.format.duration,
             }
             if(obj.picture){
                 obj.picture = obj.picture.map(e => ({

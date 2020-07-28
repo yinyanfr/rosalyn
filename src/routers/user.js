@@ -12,10 +12,10 @@ const auth = authOpt()
 app.post("/register", async (req, res) => {
     const { email, password, username } = req.body
 
-    var user = new User()
-    user.email = email
-    user.password = password
-    user.username = username
+    var user = new User({
+        email, password, username,
+        rank: "User"
+    })
 
     try {
         await user.save()
@@ -27,9 +27,10 @@ app.post("/register", async (req, res) => {
 
         res.header("x-auth", token).send({
             _id: user._id,
-            email: user.email,
-            username: user.username,
-            token
+            email,
+            username,
+            rank: "User",
+            token,
         })
     }
     catch (err) {
@@ -43,11 +44,11 @@ app.post("/login", (req, res) => {
 
     User.findByInfo(email, password).then(user => {
         if (!user) return Promise.reject("User doesn't exist.")
+        const {email, username, rank} = user
         return user.generateToken("auth").then(token => {
             res.header("x-auth", token).send({
                 _id: user._id,
-                email: user.email,
-                username: user.username,
+                email, username, rank,
                 token
             })
         })
@@ -70,13 +71,13 @@ app.delete("/logout", auth, (req, res) => {
 
 // GET /me
 app.get("/me", auth, async (req, res) => {
-    const { _id, email, username } = req.user.toJSON()
+    const { _id, email, username, rank } = req.user.toJSON()
     try {
-        const info = await Info.findOne({ userId: _id })
         res.send({
-            _id, email, username, info
+            _id, email, username, rank
         })
     } catch (err) {
+        console.log(err)
         res.status(400).send(err)
     }
 })

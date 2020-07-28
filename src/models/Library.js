@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
 const Music = require("./Music")
+const ObjectId = require("bson-objectid")
 
 const LibrarySchema = new mongoose.Schema({
     path: {
@@ -41,7 +42,7 @@ LibrarySchema.statics.addDir = async function ({ path, rec, userId, name, descri
         await library.save()
     }
     else {
-        const {_id} = await Library.create({
+        const { _id } = await Library.create({
             path, rec, userId,
             name: name ? name : path,
             description,
@@ -50,14 +51,35 @@ LibrarySchema.statics.addDir = async function ({ path, rec, userId, name, descri
     }
 
     await Music.removeDir(libraryId)
-    
+
     return Music.addDir(path, rec, userId, libraryId)
 }
 
-LibrarySchema.statics.removeDir = async function(libraryId){
+LibrarySchema.statics.removeDir = async function (libraryId) {
     const Library = this
     await Music.removeDir(libraryId)
-    return Library.deleteOne({_id: libraryId})
+    return Library.deleteOne({ _id: libraryId })
+}
+
+LibrarySchema.methods.count = async function () {
+    const library = this
+    const res = await Music.aggregate([
+        {
+            $project: {
+                libraryId: 1
+            },
+        },
+        {
+            $match: {
+                libraryId: ObjectId("5f2037d3031a6c7cf1162ce5")
+            }
+        },
+        {
+            $count: "libraryId" // and this is a number
+        }
+    ])
+
+    return res[0].libraryId
 }
 
 module.exports = mongoose.model("Library", LibrarySchema)
