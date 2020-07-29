@@ -34,13 +34,14 @@ app.delete("/remove", authRank("Admin"), async (req, res) => {
 app.get("/all", authRank("Admin"), async (req, res) => {
     try {
         const all = await Library.find({})
-        const reqs = all.map(e => e.count())
+        const reqs = all.map(e => e.count(e._id))
         const counts = await Promise.all(reqs)
         res.send(all.map((e, i) => ({
             ...e._doc,
             count: counts[i]
         })))
-    } catch (error) {
+    } catch (err) {
+        console.log(err)
         res.status(400).send(err)
     }
 })

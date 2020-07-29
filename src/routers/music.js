@@ -7,6 +7,7 @@ const authOpt = require("../middlewares/auth-opt")
 const multer = require("multer")
 const {upload_destination} = require("../config/general.json")
 const authRank = require("../middlewares/auth-rank")
+const User = require("../models/User")
 
 const app = express.Router()
 const auth = authOpt()
@@ -52,15 +53,18 @@ app.get("/info/:musicId", auth, async (req, res) => {
     }
 })
 
-app.get("/download/:musicId", auth, async (req, res) => {
-    const {musicId} = req.params
+app.get("/download/:token/:musicId", async (req, res) => {
+    const {musicId, token} = req.params
     try {
-        const music = await Music.findById(music)
+        const user = await User.findByToken(token)
+        if(!user) throw "Unauthorized"
+        const music = await Music.findById(musicId)
         if(!music){
             throw "music not found"
         }
         res.sendFile(music.path)
     } catch (err) {
+        console.log(err)
         res.status(400).send(err)
     }
 })
@@ -68,25 +72,24 @@ app.get("/download/:musicId", auth, async (req, res) => {
 app.get("/all", auth, async (req, res) => {
     try {
         const music = await Music.find({})
-        res.send("music")
+        res.send(music)
     } catch (err) {
         res.status(400).send(err)
     }
 })
 
-// TODO:
-// app.get("/query", auth, async (req, res) => {
-//     const {
-//         title, artist, album
-//     } = req.query
-
-
-// })
-
-// app.get("/search/:words", auth, async (req, res) => {
-//     const {words} = req.params
-
-// }) 
+app.get("/precise", auth, async (req, res) => {
+    const {album, artist} = req.query
+    const query = {}
+    if(album) query.album = album
+    if(artist) query.artist = artist
+    try {
+        const music = await Music.find(query)
+        res.send(music)
+    } catch (err) {
+        res.status(400).send(err)
+    }
+})
 
 app.get("/sample/:size", auth, async (req, res) => {
     const {size} = req.params

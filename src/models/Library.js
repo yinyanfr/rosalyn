@@ -61,7 +61,7 @@ LibrarySchema.statics.removeDir = async function (libraryId) {
     return Library.deleteOne({ _id: libraryId })
 }
 
-LibrarySchema.methods.count = async function () {
+LibrarySchema.methods.count = async function (libraryId) {
     const library = this
     const res = await Music.aggregate([
         {
@@ -71,13 +71,15 @@ LibrarySchema.methods.count = async function () {
         },
         {
             $match: {
-                libraryId: ObjectId("5f2037d3031a6c7cf1162ce5")
+                libraryId: ObjectId(libraryId)
             }
         },
         {
             $count: "libraryId" // and this is a number
         }
     ])
+
+    console.log(res)
 
     return res[0].libraryId
 }
