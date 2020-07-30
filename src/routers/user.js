@@ -12,7 +12,7 @@ const auth = authOpt()
 app.post("/register", async (req, res) => {
     const { email, password, username } = req.body
 
-    var user = new User({
+    const user = new User({
         email, password, username,
         rank: "User"
     })
