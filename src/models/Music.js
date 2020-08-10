@@ -21,6 +21,14 @@ const MusicSchema = new mongoose.Schema({
             data: String,
         }
     ],
+    thumbnail: [
+        {
+            format: String,
+            type: {type: String},
+            description: String,
+            data: String,
+        }
+    ],
 
     duration: Number,
 
@@ -62,7 +70,7 @@ MusicSchema.statics.sample = function(size){
     const Music = this
     return Music.aggregate([{
         "$sample": {
-            "$size": size
+            "size": size
         }
     }])
 }

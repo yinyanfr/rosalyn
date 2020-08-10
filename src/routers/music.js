@@ -71,7 +71,25 @@ app.get("/download/:token/:musicId", async (req, res) => {
 
 app.get("/all", auth, async (req, res) => {
     try {
-        const music = await Music.find({})
+        // FIXME: this aggregation
+        const music = await Music.aggregate([
+            {
+                "$project": {
+                    _id: 1,
+                    path: 1,
+                    title: 1,
+                    album: 1,
+                    artists: 1,
+                    artist: 1,
+                    duration: 1,
+                    tags: 1,
+                    userId: 1,
+                    libraryId: 1,
+                    lyrics: 1,
+                    picture: "$thumbnail"
+                }
+            }
+        ])
         res.send(music)
     } catch (err) {
         res.status(400).send(err)
@@ -94,9 +112,10 @@ app.get("/precise", auth, async (req, res) => {
 app.get("/sample/:size", auth, async (req, res) => {
     const {size} = req.params
     try {
-        const sample = await Music.sample(size)
+        const sample = await Music.sample(parseInt(size))
         res.send(sample)
     } catch (err) {
+        console.log(err)
         res.status(400).send(err)
     }
 })

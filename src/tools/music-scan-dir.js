@@ -2,6 +2,8 @@ const readDirRec = require("recursive-readdir")
 const readDir = require("./read-dir")
 const meta = require("music-metadata")
 const allSettled = require("promise.allsettled")
+const resize =require("resize-img")
+const asyncForEach = require("./async-for-each")
 
 const parseList = list => {
     const res = list.map(e => meta.parseFile(e))
@@ -12,7 +14,8 @@ const parseList = list => {
 const scanList = async paths => {
     const metas = await parseList(paths)
     const scanned = []
-    metas.forEach((e, i) => {
+
+    await asyncForEach(metas, async (e, i) => {
         if(e.status === "fulfilled"){
             const obj = {
                 path: paths[i],
@@ -20,6 +23,15 @@ const scanList = async paths => {
                 duration: e.value.format.duration,
             }
             if(obj.picture){
+                let thumbnail = []
+                for (let pic of obj.picture){
+                    thumbnail.push(({
+                        ...pic,
+                        data: (await resize(pic?.data, {width: 80, height: 80})).toString("base64")
+                    }))
+                }
+                obj.thumbnail = thumbnail
+
                 obj.picture = obj.picture.map(e => ({
                     ...e,
                     data: e.data.toString("base64"),
