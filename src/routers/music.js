@@ -21,14 +21,14 @@ const storage = multer.diskStorage({
 })
 const upload = multer({dest: upload_destination})
 
-app.post("/upload", [auth, upload.array("music", 100)], async (req, res) => {
-    const {user, files} = req
-    try {
-        await Music.addMany(files.map(e => e.path), user._id)
-    } catch (err) {
-        res.status(400).send(err)
-    }
-})
+// app.post("/upload", [auth, upload.array("music", 100)], async (req, res) => {
+//     const {user, files} = req
+//     try {
+//         await Music.addMany(files.map(e => e.path), user._id)
+//     } catch (err) {
+//         res.status(400).send(err)
+//     }
+// })
 
 app.delete("/remove", authRank("Moderator"), async (req, res) => {
     const {musicId} = req.body

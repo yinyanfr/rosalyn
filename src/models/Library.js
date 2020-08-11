@@ -1,6 +1,7 @@
 const mongoose = require("mongoose")
 const Music = require("./Music")
 const ObjectId = require("bson-objectid")
+const { musicScanDir } = require("../tools/music-scan-dir")
 
 const LibrarySchema = new mongoose.Schema({
     path: {
@@ -52,7 +53,7 @@ LibrarySchema.statics.addDir = async function ({ path, rec, userId, name, descri
 
     await Music.removeDir(libraryId)
 
-    return Music.addDir(path, rec, userId, libraryId)
+    return musicScanDir(path, rec, userId, libraryId)
 }
 
 LibrarySchema.statics.removeDir = async function (libraryId) {
@@ -79,9 +80,10 @@ LibrarySchema.methods.count = async function (libraryId) {
         }
     ])
 
-    console.log(res)
-
-    return res[0].libraryId
+    if (res[0]) {
+        return res[0].libraryId
+    }
+    return 0
 }
 
 module.exports = mongoose.model("Library", LibrarySchema)

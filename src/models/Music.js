@@ -1,7 +1,4 @@
 const mongoose = require("mongoose")
-const {
-    musicScanDir, scanList
-} = require("../tools/music-scan-dir")
 
 const MusicSchema = new mongoose.Schema({
     path: {
@@ -47,19 +44,12 @@ const MusicSchema = new mongoose.Schema({
     lyrics: [String]
 })
 
-MusicSchema.statics.addMany = async function(paths, userId){
-    const Music = this
-    const scanned = await scanList(paths)
-    const music = scanned.map(e => ({...e, userId}))
-    return Music.insertMany(music)
-}
-
-MusicSchema.statics.addDir = async function(path, rec, userId, libraryId){
-    const Music = this
-    const scanned = await musicScanDir(path, rec)
-    const music = scanned.map(e => ({...e, userId, libraryId}))
-    return Music.insertMany(music, {ordered: false})
-}
+// MusicSchema.statics.addMany = async function(paths, userId){
+//     const Music = this
+//     const scanned = await scanList(paths)
+//     const music = scanned.map(e => ({...e, userId}))
+//     return Music.insertMany(music)
+// }
 
 MusicSchema.statics.removeDir = function(libraryId){
     const Music = this

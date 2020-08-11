@@ -106,3 +106,4 @@ dist
 # misc
 meta.txt
 music/
+build/
