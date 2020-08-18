@@ -8,6 +8,7 @@ const multer = require("multer")
 const {upload_destination} = require("../config/general.json")
 const authRank = require("../middlewares/auth-rank")
 const User = require("../models/User")
+const Share = require("../models/Share")
 
 const app = express.Router()
 const auth = authOpt()
@@ -206,6 +207,50 @@ app.delete("/review", auth, async (req, res) => {
             _id: reviewId,
         })
         res.send("OK")
+    } catch (err) {
+        res.status(400).send(err)
+    }
+})
+
+app.post("/share", auth, async (req, res) => {
+    const {musicId} = req.body
+    const {user} = req
+    const userId = user._id
+
+    try {
+        const shared = await Share.findOne({musicId, userId})
+        if(shared){
+            res.send({
+                shareId: shared._id
+            })
+        }
+        else {
+            const share = new Share({musicId, userId})
+            await share.save()
+            res.send({
+                shareId: share._id
+            })
+        }
+    } catch (err) {
+        res.status(400).send(err)
+    }
+})
+
+app.get("/share/:shareId", async (req, res) => {
+    const {shareId} = req.params
+    try {
+        const music = await Share.getMusic(shareId)
+        res.send(music)
+    } catch (err) {
+        res.status(400).send(err)
+    }
+})
+
+app.get("/shared_file/:shareId", async (req, res) => {
+    const {shareId} = req.params
+    try {
+        const music = await Share.getMusic(shareId)
+        res.sendFile(music.path)
     } catch (err) {
         res.status(400).send(err)
     }
