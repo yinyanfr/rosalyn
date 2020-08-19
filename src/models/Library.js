@@ -23,6 +23,7 @@ const LibrarySchema = new mongoose.Schema({
 
     name: {
         type: String,
+        default: "My Music"
     },
 
     description: String,

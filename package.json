@@ -8,9 +8,10 @@
   },
   "scripts": {
     "start": "nodemon src/app.js",
-    "test": "mocha src/tests/*.test.js",
+    "test": "mocha src/tests/*.test.js --exit",
     "build": "parcel build src/app.js",
-    "setup": "node src/cli/install.js"
+    "setup": "node src/cli/install.js",
+    "manage": "node src/cli/library-management.js"
   },
   "repository": {
     "type": "git",
