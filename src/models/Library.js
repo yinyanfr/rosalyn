@@ -52,8 +52,6 @@ LibrarySchema.statics.addDir = async function ({ path, rec, userId, name, descri
         libraryId = _id
     }
 
-    await Music.removeDir(libraryId)
-
     return musicScanDir(path, rec, userId, libraryId)
 }
 
