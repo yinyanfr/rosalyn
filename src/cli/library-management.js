@@ -27,7 +27,7 @@ const scan = async (path, rec = true) => {
     console.log("done")
 }
 
-(async () => {
+const libMngt = async () => {
     console.log("Library Management")
     while (true) {
         console.log("----")
@@ -66,4 +66,14 @@ const scan = async (path, rec = true) => {
             await scan(libPath, rec)
         }
     }
-})()
+}
+
+const terminate = () => {
+    mongoose.connection.close()
+}
+
+module.exports = {
+    list, scan,
+    libMngt,
+    terminate,
+}

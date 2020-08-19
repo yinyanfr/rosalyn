@@ -109,4 +109,4 @@ const install = async () => {
     
 }
 
-install()
+module.exports = install
