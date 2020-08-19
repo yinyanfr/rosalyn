@@ -1,0 +1,25 @@
+{
+  "short_name": "Rosalyn WebClient",
+  "name": "A Web interface for rosalyn the music management system.",
+  "icons": [
+    {
+      "src": "note1024.png",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "note1024.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "note1024.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
