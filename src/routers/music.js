@@ -44,7 +44,7 @@ app.delete("/remove", authRank("Moderator"), async (req, res) => {
 app.get("/info/:musicId", auth, async (req, res) => {
     const {musicId} = req.params
     try {
-        const music = await Music.findById(music)
+        const music = await Music.findById(musicId)
         if(!music){
             throw "music not found"
         }
