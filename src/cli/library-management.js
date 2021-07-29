@@ -23,6 +23,7 @@ const list = async () => {
 }
 
 const scan = async (path, rec = true) => {
+    console.log("Scanning ...")
     await Library.addDir({ path, rec })
     console.log("done")
 }

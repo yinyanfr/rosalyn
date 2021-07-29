@@ -56,13 +56,29 @@ MusicSchema.statics.removeDir = function(libraryId){
     return Music.deleteMany({libraryId})
 }
 
-MusicSchema.statics.sample = function(size){
+MusicSchema.statics.sample = function(size, dislikeList){
     const Music = this
-    return Music.aggregate([{
-        "$sample": {
-            "size": size
-        }
-    }])
+    if (dislikeList && dislikeList.length) {
+        return Music.aggregate([
+            {
+                $match: {
+                    _id: {$nin: dislikeList}
+                }
+            },
+            {
+                "$sample": {
+                    "size": size
+                }
+            },
+        ])
+    }
+    else {
+        return Music.aggregate([{
+            "$sample": {
+                "size": size
+            }
+        }])
+    }
 }
 
 module.exports = mongoose.model("Music", MusicSchema)

@@ -4,5 +4,6 @@
         "useNewUrlParser": true,
         "useUnifiedTopology": true,
         "useCreateIndex": true
-    }
+    },
+    "testdb": "mongodb://localhost:27017/rosalyntest"
 }

@@ -112,8 +112,14 @@ app.get("/precise", auth, async (req, res) => {
 
 app.get("/sample/:size", auth, async (req, res) => {
     const {size} = req.params
+    const {user} = req
+
     try {
-        const sample = await Music.sample(parseInt(size))
+        const dislikes = await Taste.find({
+            userId: user._id,
+            favor: false,
+        })
+        const sample = await Music.sample(parseInt(size), dislikes.map(e => e.musicId))
         res.send(sample)
     } catch (err) {
         console.log(err)
@@ -121,11 +127,25 @@ app.get("/sample/:size", auth, async (req, res) => {
     }
 })
 
-app.patch("/taste", auth, async (req, res) => {
+app.post("/taste", auth, async (req, res) => {
     const {musicId, favor} = req.body
     const {user} = req
     try {
         await Taste.toggle(user._id, musicId, favor)
+        res.send({musicId})
+    } catch (err) {
+        res.status(400).send(err)
+    }
+})
+
+app.get("/favorite", auth, async (req, res) => {
+    const {user} = req
+    try {
+        const data = await Taste.find({
+            userId: user.id,
+            favor: true,
+        })
+        res.send(data.map(e => e.musicId))
     } catch (err) {
         res.status(400).send(err)
     }
@@ -140,7 +160,7 @@ app.post("/add_to_playlist", auth, async (req, res) => {
             throw "playlist not found, or auth failed"
         }
         await playlist.add(musicId)
-        res.send("OK")
+        res.send({musicId, playlistId})
     } catch (err) {
         res.status(400).send(err)
     }
@@ -155,7 +175,7 @@ app.delete("/remove_from_playlist", auth, async (req, res) => {
             throw "playlist not found, or auth failed"
         }
         await playlist.removeMusic(musicId)
-        res.send("OK")
+        res.send({musicId, playlistId})
     } catch (err) {
         res.status(400).send(err)
     }
