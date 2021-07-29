@@ -54,6 +54,16 @@ app.get("/info/:musicId", auth, async (req, res) => {
     }
 })
 
+app.get("/infos/:musicIds", auth, async (req, res) => {
+    try {
+        const musicIds = JSON.parse(req.params.musicIds)
+        const music = await Music.find({_id: {$in: musicIds}})
+        res.send(music)
+    } catch (err) {
+        res.status(400).send(err)
+    }
+})
+
 app.get("/download/:token/:musicId", async (req, res) => {
     const {musicId, token} = req.params
     try {
