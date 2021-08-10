@@ -1,19 +1,19 @@
-const nodemailer = require("nodemailer")
-const smtp = require("../config/smtp.json")
+import nodemailer from "nodemailer"
+import smtp from "../config/smtp.json"
 
 const transporter = smtp.host.length ? nodemailer.createTransport(smtp) : null
 
-const populateProps = (str, props) => {
+const populateProps = (str: string, props: { [x: string]: any }) => {
     let res = str
     if (props) {
         for (let key in props) {
-            res = res.replace(new RegExp(`{${key}}`, 'g'))
+            res = res.replace(new RegExp(`{${key}}`, 'g'), props[key])
         }
     }
     return res
 }
 
-const sendMail = (template, receiver, props) => {
+const sendMail = (template: { [x: string]: any }, receiver: string, props: { [x: string]: any }) => {
     if (transporter) {
         const { text, html } = template
         const mail = {
@@ -29,4 +29,4 @@ const sendMail = (template, receiver, props) => {
     return Promise.reject("stmp_service_not_configured")
 }
 
-module.exports = sendMail
+export default sendMail

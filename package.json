@@ -8,8 +8,8 @@
   },
   "scripts": {
     "start": "nodemon src/app.js",
-    "test": "NODE_ENV=test mocha src/tests/*.test.js --exit",
-    "build": "parcel build src/app.js",
+    "test": "NODE_ENV=test mocha -r ts-node/register 'src/tests/tests.ts' --exit",
+    "build": "tsc",
     "setup": "node bin/rosalyn.js setup",
     "manage": "node bin/rosalyn.js manage"
   },
@@ -47,10 +47,15 @@
     "xss": "^1.0.7"
   },
   "devDependencies": {
+    "@types/nodemailer": "^6.4.4",
+    "@types/recursive-readdir": "^2.2.0",
+    "@types/resize-img": "^2.0.1",
     "expect": "^26.1.0",
     "mocha": "^8.1.1",
     "nodemon": "^2.0.4",
-    "parcel-bundler": "^1.9.4",
-    "supertest": "^4.0.2"
+    "supertest": "^4.0.2",
+    "ts-node": "^10.2.0",
+    "tslint": "^6.1.3",
+    "typescript": "^4.3.5"
   }
 }

@@ -1,20 +1,20 @@
-const readDirRec = require("recursive-readdir")
-const readDir = require("./read-dir")
-const meta = require("music-metadata")
-const allSettled = require("promise.allsettled")
-const resize = require("resize-img")
-const Music = require("../models/Music")
+import readDirRec from "recursive-readdir"
+import readDir from "./read-dir"
+import meta from "music-metadata"
+import resize from "resize-img"
+import Music from "../models/Music"
+import { ObjectId } from "mongoose"
 
-const parseList = list => {
+
+const parseList = (list: string[]) => {
     const res = list.map(e => meta.parseFile(e))
-    if (Promise.allSettled) return Promise.allSettled(res)
-    else return allSettled(res)
+    return Promise.allSettled(res)
 }
 
-const scanList = async (paths, userId, libraryId) => {
+export const scanList = async (paths: string[], userId: ObjectId, libraryId: ObjectId) => {
     const metas = await parseList(paths)
 
-    const existing = await Music.find({path: {$in: paths}})
+    const existing = await Music.find({ path: { $in: paths } })
 
     for (let i = 0; i < metas.length; i++) {
         let e = metas[i]
@@ -23,7 +23,7 @@ const scanList = async (paths, userId, libraryId) => {
                 console.log(`Exist: ${e.value.common.title}`)
             }
             else {
-                const obj = {
+                const obj: any = { // TODO
                     path: paths[i],
                     ...(e.value.common),
                     duration: e.value.format.duration,
@@ -38,7 +38,7 @@ const scanList = async (paths, userId, libraryId) => {
                     }
                     obj.thumbnail = thumbnail
 
-                    obj.picture = obj.picture.map(e => ({
+                    obj.picture = obj.picture.map((e: any) => ({
                         ...e,
                         data: e.data.toString("base64"),
                     }))
@@ -53,19 +53,14 @@ const scanList = async (paths, userId, libraryId) => {
         }
     }
     const deleted = await Music.find({ path: { $nin: paths } })
-    await Music.deleteMany({path: {$nin: paths}})
+    await Music.deleteMany({ path: { $nin: paths } })
     deleted.forEach(e => {
         console.log(`Deleted: ${e.title}`)
     })
 }
 
-const musicScanDir = async (dirpath, rec, userId, libraryId) => {
+export const musicScanDir = async (dirpath: string, userId: ObjectId, libraryId: ObjectId, rec?: boolean) => {
     const readdir = rec ? readDirRec : readDir
     const files = await readdir(dirpath)
     await scanList(files, userId, libraryId)
-}
-
-module.exports = {
-    musicScanDir,
-    scanList
 }
