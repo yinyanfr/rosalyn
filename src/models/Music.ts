@@ -1,10 +1,10 @@
 import { Document, Model, ObjectId, Schema, model } from "mongoose"
 
 export interface IImage {
-    format?: string
-    type?: string
+    format: string
+    type: string
     description: string
-    data?: string
+    data: string
 }
 
 export interface IMusic extends Document {

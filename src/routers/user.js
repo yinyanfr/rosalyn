@@ -1,7 +1,7 @@
 const express = require("express")
 const User = require("../models/User")
 const authOpt = require("../middlewares/auth-opt")
-const {register, reset_password} = require("../config/mail.json")
+const { register, reset_password } = require("../config/mail.json")
 const sendMail = require("../tools/send-mail")
 
 const app = express.Router()
@@ -20,7 +20,7 @@ app.post("/register", async (req, res) => {
     try {
         await user.save()
         const token = await user.generateToken("auth")
-        
+
         sendMail(register, user.email).catch(err => {
             console.log(err)
         })
@@ -44,7 +44,7 @@ app.post("/login", (req, res) => {
 
     User.findByInfo(email, password).then(user => {
         if (!user) return Promise.reject("User doesn't exist.")
-        const {email, username, rank} = user
+        const { email, username, rank } = user
         return user.generateToken("auth").then(token => {
             res.header("x-auth", token).send({
                 _id: user._id,
@@ -71,7 +71,7 @@ app.delete("/logout", auth, (req, res) => {
 
 // GET /me
 app.get("/me", auth, async (req, res) => {
-    const { _id, email, username, rank } = req.user.toJSON()
+    const { _id, email, username, rank } = req.user.getInfo()
     try {
         res.send({
             _id, email, username, rank
@@ -89,7 +89,7 @@ app.post("/iforgot", async (req, res) => {
     try {
         if (!user) throw "user not found"
         const token = await user.generateToken()
-        await sendMail(reset_password, email, {token})
+        await sendMail(reset_password, email, { token })
         res.send("OK")
     }
     catch (err) {

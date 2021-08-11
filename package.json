@@ -47,9 +47,12 @@
     "xss": "^1.0.7"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
+    "@types/jsonwebtoken": "^8.5.4",
     "@types/nodemailer": "^6.4.4",
     "@types/recursive-readdir": "^2.2.0",
     "@types/resize-img": "^2.0.1",
+    "@types/validator": "^13.6.3",
     "expect": "^26.1.0",
     "mocha": "^8.1.1",
     "nodemon": "^2.0.4",

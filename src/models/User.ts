@@ -1,11 +1,47 @@
-const mongoose = require("mongoose")
-const validator = require("validator")
-const jwt = require("jsonwebtoken")
-const bcrypt = require("bcryptjs")
-const { salt } = require("../config/auth.json")
-const ranks = require("../config/rank")
+import { model, Schema, ObjectId, Document, Model } from "mongoose"
+import validator from "validator"
+import jwt from "jsonwebtoken"
+import bcrypt from "bcryptjs"
+import { salt } from "../config/auth.json"
+import ranks from "../config/rank.json"
 
-const UserSchema = new mongoose.Schema({
+declare module "jsonwebtoken" {
+    export interface UserTokenJwtPayload extends jwt.JwtPayload {
+        _id: string
+    }
+}
+
+export interface Token {
+    access?: string
+    token: string
+}
+
+export interface UserInfo {
+    _id: ObjectId
+    email: string
+    username: string
+    rank: string
+}
+
+export interface IUser extends Document {
+    email: string
+    password: string
+    username: string
+    rank: string
+    tokens: Token[]
+    getInfo(): UserInfo
+    generateToken(access?: string): Promise<string>
+    removeToken(token: string): Promise<void>
+    cleanToken(): Promise<IUser>
+    outrank(rank: string): boolean
+}
+
+export interface IUserModel extends Model<IUser> {
+    findByToken(token: string): IUser | Promise<void>
+    findByInfo(email: string, password: string): IUser | Promise<void>
+}
+
+const UserSchema = new Schema<IUser, IUserModel>({
     email: {
         type: String,
         required: true,
@@ -47,12 +83,12 @@ const UserSchema = new mongoose.Schema({
     }]
 })
 
-UserSchema.methods.toJSON = function () {
+UserSchema.methods.getInfo = function () {
     var user = this
     const {
         _id, email, username, rank
     } = user.toObject()
-    return {_id, email, username, rank}
+    return { _id, email, username, rank }
 }
 
 UserSchema.methods.generateToken = function (access) {
@@ -86,10 +122,10 @@ UserSchema.statics.findByToken = function (token, mild) {
     var decoded
 
     try {
-        decoded = jwt.verify(token, salt)
+        decoded = <jwt.UserTokenJwtPayload>jwt.verify(token, salt)
     }
     catch (err) {
-        if(!mild){
+        if (!mild) {
             return Promise.reject()
         }
         return Promise.resolve()
@@ -136,4 +172,4 @@ UserSchema.pre("save", function (next) {
     else next()
 })
 
-module.exports = mongoose.model("User", UserSchema)
+export default model<IUser, IUserModel>("User", UserSchema)

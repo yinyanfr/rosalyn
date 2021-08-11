@@ -1,14 +1,29 @@
-const mongoose = require("mongoose")
-const Taste = require("./Taste")
+import { Schema, model, Document, ObjectId, Model } from "mongoose"
+import Taste from "./Taste"
 
-const PlaylistSchema = new mongoose.Schema({
+export interface IPlaylist extends Document {
+    userId: ObjectId
+    music: ObjectId[]
+    title: string
+    description: string
+    tags: string[]
+    add(musicId: ObjectId): Promise<void>
+    removeMusic(musicId: ObjectId): Promise<void>
+}
+
+export interface IPlaylistModel extends Model<IPlaylist> {
+    favorite(userId: ObjectId): Promise<void>
+    populateMusic(playlistId: ObjectId): Promise<void>
+}
+
+const PlaylistSchema = new Schema<IPlaylist, IPlaylistModel>({
     userId: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "User"
     },
 
     music: [{
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Music"
     }],
 
@@ -22,7 +37,7 @@ const PlaylistSchema = new mongoose.Schema({
     tags: [String],
 })
 
-PlaylistSchema.statics.favorite = async function(userId){
+PlaylistSchema.statics.favorite = async function (userId) {
     const music = await Taste.aggregate([
         {
             "$match": {
@@ -45,7 +60,7 @@ PlaylistSchema.statics.favorite = async function(userId){
     })
 }
 
-PlaylistSchema.statics.populateMusic = async function(playlistId){
+PlaylistSchema.statics.populateMusic = async function (playlistId) {
     const Playlist = this
     const playlists = await Playlist.aggregate([
         {
@@ -69,22 +84,22 @@ PlaylistSchema.statics.populateMusic = async function(playlistId){
     return playlists[0]
 }
 
-PlaylistSchema.methods.add = function(musicId){
+PlaylistSchema.methods.add = function (musicId) {
     const playlist = this
     const index = playlist.music.indexOf(musicId)
-    if(index === -1){
+    if (index === -1) {
         playlist.music.push(musicId)
     }
     return playlist.save()
 }
 
-PlaylistSchema.methods.removeMusic = function(musicId){
+PlaylistSchema.methods.removeMusic = function (musicId) {
     const playlist = this
     const index = playlist.music.indexOf(musicId)
-    if(index > -1){
+    if (index > -1) {
         playlist.music.splice(index, 1)
     }
     return playlist.save()
 }
 
-module.exports = mongoose.model("Playlist", PlaylistSchema)
+export default model<IPlaylist, IPlaylistModel>("Playlist", PlaylistSchema)

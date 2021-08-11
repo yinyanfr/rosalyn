@@ -2,7 +2,7 @@ import readDirRec from "recursive-readdir"
 import readDir from "./read-dir"
 import meta from "music-metadata"
 import resize from "resize-img"
-import Music from "../models/Music"
+import { Music } from "../models"
 import { ObjectId } from "mongoose"
 
 
