@@ -1,6 +1,6 @@
-const express = require("express")
-const Library = require("../models/Library")
-const authRank = require("../middlewares/auth-rank")
+import express from "express"
+import { authRank } from "../middlewares"
+import { Library } from "../models"
 
 const app = express.Router()
 
@@ -10,7 +10,7 @@ app.post("/add", authRank("Admin"), async (req, res) => {
     } = req.body
 
     try {
-        await Library.addDir({path, rec, userId, name, description})
+        await Library.addDir({ path, rec, userId, name, description })
         res.send("OK")
     } catch (err) {
         console.log(err)
@@ -46,4 +46,4 @@ app.get("/all", authRank("Admin"), async (req, res) => {
     }
 })
 
-module.exports = app
+export default app

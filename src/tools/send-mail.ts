@@ -13,7 +13,7 @@ const populateProps = (str: string, props: { [x: string]: any }) => {
     return res
 }
 
-const sendMail = (template: { [x: string]: any }, receiver: string, props: { [x: string]: any }) => {
+const sendMail = (template: { [x: string]: any }, receiver: string, props?: { [x: string]: any }) => {
     if (transporter) {
         const { text, html } = template
         const mail = {

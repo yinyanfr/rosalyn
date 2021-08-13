@@ -12,6 +12,7 @@ export interface ILibrary extends Document {
     description: string
     lastModified: number
     count(libraryId: ObjectId): number
+    _doc: any // campatibility
 }
 
 export interface ILibraryModel extends Model<ILibrary> {

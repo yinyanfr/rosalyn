@@ -1,8 +1,9 @@
-const express = require("express")
-const User = require("../models/User")
-const authOpt = require("../middlewares/auth-opt")
-const { register, reset_password } = require("../config/mail.json")
-const sendMail = require("../tools/send-mail")
+import { IUser } from './../models/User';
+import express from "express"
+import { authOpt } from "../middlewares"
+import { User } from "../models"
+import sendMail from "../tools/send-mail"
+import { register, reset_password } from "../config/mail.json"
 
 const app = express.Router()
 const auth = authOpt()
@@ -39,45 +40,51 @@ app.post("/register", async (req, res) => {
 })
 
 // POST /login
-app.post("/login", (req, res) => {
+app.post("/login", async (req, res) => {
     const { email, password } = req.body
 
-    User.findByInfo(email, password).then(user => {
-        if (!user) return Promise.reject("User doesn't exist.")
-        const { email, username, rank } = user
-        return user.generateToken("auth").then(token => {
+    try {
+        const user: IUser | void = await User.findByInfo(email, password)
+        if (user) {
+            const { username, rank } = user
+            const token = await user.generateToken("auth")
             res.header("x-auth", token).send({
                 _id: user._id,
                 email, username, rank,
                 token
             })
-        })
-    }).catch(e => {
-        res.status(400).send(e)
-    })
+        }
+        else {
+            throw "User not found"
+        }
+    } catch (error) {
+        res.status(400).send(error)
+    }
 })
 
 // DELETE /logout
-app.delete("/logout", auth, (req, res) => {
-    req.user.removeToken(req.token).then(
-        () => {
-            res.send("OK")
-        },
-        () => {
-            res.status(400).send("ERROR")
-        }
-    )
+app.delete("/logout", auth, async (req, res) => {
+    const user = req.user!
+    const token = req.token!
+
+    try {
+        await user.removeToken(token)
+        res.send()
+    } catch (error) {
+        res.status(400).send(error)
+    }
 })
 
 // GET /me
 app.get("/me", auth, async (req, res) => {
-    const { _id, email, username, rank } = req.user.getInfo()
+    const user = req.user!
+    const { _id, email, username, rank } = user.getInfo()
+
     try {
         res.send({
             _id, email, username, rank
         })
     } catch (err) {
-        console.log(err)
         res.status(400).send(err)
     }
 })
@@ -87,6 +94,7 @@ app.post("/iforgot", async (req, res) => {
     const { email } = req.body
 
     try {
+        const user = await User.findOne({ email })
         if (!user) throw "user not found"
         const token = await user.generateToken()
         await sendMail(reset_password, email, { token })
@@ -97,4 +105,4 @@ app.post("/iforgot", async (req, res) => {
     }
 })
 
-module.exports = app
+export default app
