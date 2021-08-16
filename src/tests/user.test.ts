@@ -1,12 +1,8 @@
-
-const expect = require("expect")
-const request = require("supertest")
-const app = require("../app")
-const User = require("../models/User")
-const {
-    user1, user2,
-    addUser
-} = require("./user.seed")
+import expect from "expect"
+import request from "supertest"
+import app from "../app"
+import { User } from "../models"
+import { user1, user2, addUser } from "./user.seed"
 
 beforeEach(async () => {
     await User.deleteOne({ email: user1.email })
@@ -27,7 +23,7 @@ describe("POST /register", () => {
 
         const user = await User.findOne({ email })
         expect(user).toBeTruthy()
-        expect(user.password).not.toBe(password)
+        expect(user?.password).not.toBe(password)
     })
 
 
@@ -49,7 +45,7 @@ describe("POST /register", () => {
     })
 })
 
-describe("POST /login", done => {
+describe("POST /login", () => {
     const { email, password } = user1
     it("should login an existing user with correct password", async () => {
         const token = await addUser(user1)
@@ -62,7 +58,7 @@ describe("POST /login", done => {
             })
 
         const user = await User.findByToken(token)
-        expect(user.email).toBe(user1.email)
+        expect(user?.email).toBe(user1.email)
     })
 
     it("should Reject a login request with wrong password", async () => {

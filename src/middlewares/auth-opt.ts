@@ -24,7 +24,7 @@ const authOpt = (optional?: boolean): RequestHandler => async (req, res, next) =
             }
         }
         else {
-            const user = User.findByToken(token) as IUser
+            const user = await User.findByToken(token) as IUser
 
             if (!user) {
                 throw "Unauthorized"

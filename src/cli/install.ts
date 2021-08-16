@@ -1,9 +1,13 @@
-const fs = require("fs")
-const prompts = require("prompts")
-const path = require("path")
-const chalk = require("chalk")
+// const fs = require("fs")
+// const prompts = require("prompts")
+// const path = require("path")
+// const chalk = require("chalk")
+import fs from "fs"
+import prompts from "prompts"
+import path from "path"
+import chalk from "chalk"
+import mongoose from "mongoose"
 
-const mongoose = require('mongoose')
 mongoose.Promise = global.Promise
 
 const db = {
@@ -21,7 +25,7 @@ const general = {
 }
 
 const install = async () => {
-    const {uri} = await prompts({
+    const { uri } = await prompts({
         type: "text",
         name: "uri",
         message: "The address of database : ",
@@ -29,14 +33,14 @@ const install = async () => {
     })
 
     mongoose.connect(uri, db.options)
-    if(uri !== db.uri){
+    if (uri !== db.uri) {
         db.uri = uri
         fs.writeFileSync(path.join(__dirname, "..", "config", "database.json"), JSON.stringify(db))
     }
 
     console.log(chalk.bgGreen("Successfully connected to database."))
 
-    const {port, upload_destination} = await prompts([
+    const { port, upload_destination } = await prompts([
         {
             type: "number",
             name: "port",
@@ -51,21 +55,21 @@ const install = async () => {
         }
     ])
 
-    if(port !== general.port && upload_destination !== general.upload_destination){
+    if (port !== general.port && upload_destination !== general.upload_destination) {
         general.port = port
         general.upload_destination = upload_destination
         fs.writeFileSync(path.join(__dirname, "..", "config", "general.json"), JSON.stringify(general))
     }
 
-    const {smtp} = await prompts({
+    const { smtp } = await prompts({
         type: "confirm",
         name: "smtp",
         message: "Do you want to configure the smtp service? ",
         initial: false
     })
 
-    if(smtp){
-        const {host, secure, port, user, pass} = await prompts([
+    if (smtp) {
+        const { host, secure, port, user, pass } = await prompts([
             {
                 type: "text",
                 name: "host",
@@ -79,7 +83,7 @@ const install = async () => {
             },
             {
                 type: "number",
-                name: "port: ",
+                name: "port",
                 message: "host: ",
                 initial: 587
             },
@@ -106,7 +110,7 @@ const install = async () => {
 
     mongoose.connection.close()
     console.log(chalk.bgGreen("Configuration finished."))
-    
+
 }
 
-module.exports = install
+export default install

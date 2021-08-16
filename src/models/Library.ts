@@ -18,8 +18,8 @@ export interface ILibrary extends Document {
 export interface ILibraryModel extends Model<ILibrary> {
     addDir(param:
         {
-            path: string, rec: boolean, userId: ObjectId,
-            name: string, description: string,
+            path: string, rec: boolean, userId?: ObjectId,
+            name?: string, description?: string,
         }
     ): Promise<void>
     removeDir(libraryId: ObjectId): Promise<void>
